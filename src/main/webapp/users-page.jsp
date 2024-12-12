@@ -4,6 +4,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="Model.Order_detail" %>
 <%@ page import="java.util.*" %>
+<%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -18,7 +19,6 @@
     <!--google fonts-->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.4.2/js/all.js" crossorigin="anonymous"></script>
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -29,8 +29,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"></script>
-
-
     <script src="js/productDetail.js"></script>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="css/templatemo.css">
@@ -50,6 +48,8 @@
                            href="#account-change-password">Thay đổi mật khẩu</a>
                         <a class="list-group-item list-group-item-action" data-toggle="list"
                            href="#shopping-order">Thông tin đơn hàng</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                           href="#key-management">Quản lý khóa</a>
                     </div>
                 </div>
                 <%
@@ -66,7 +66,6 @@
                             <hr class="border-light m-0">
                             <div class="card-body">
                                 <div class="form-group">
-
                                     <%
                                         if (account.getFullname() == null) {
                                             account.setFullname(account.getName());
@@ -99,7 +98,6 @@
                                         </div>
                                     </div>
                                 </a>
-
                                 <!-- Form for updating user information (initially hidden) -->
                                 <form id="updateInfoForm" action="./ServletUpdateInfo" method="post"
                                       style="display: none;">
@@ -115,31 +113,6 @@
                             </div>
                         </div>
 
-                        <!-- Change Password Form -->
-                        <%--                            <div class="tab-pane fade" id="account-change-password">--%>
-                        <%--                                <!-- Change Password Form -->--%>
-                        <%--                                <div class="card-body pb-2">--%>
-                        <%--                                        <h5 class="card-title">Change Password</h5>--%>
-                        <%--                                        <form id="changePasswordForm" action="./ServletPassChanging" method="post">--%>
-                        <%--                                            <div class="form-group">--%>
-                        <%--                                                <label for="currentPassword">Current Password</label>--%>
-                        <%--                                                <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>--%>
-                        <%--                                            </div>--%>
-                        <%--                                            <div class="form-group">--%>
-                        <%--                                                <label for="newPassword">New Password</label>--%>
-                        <%--                                                <input type="password" name="newPassword" id="newPassword" class="form-control" required>--%>
-                        <%--                                            </div>--%>
-                        <%--                                            <div class="form-group">--%>
-                        <%--                                                <label for="confirmNewPassword">Confirm New Password</label>--%>
-                        <%--                                                <input type="password" name="confirmNewPassword" id="confirmNewPassword" class="form-control" required>--%>
-                        <%--                                            </div>--%>
-
-                        <%--                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#verificationModal">--%>
-                        <%--                                                Change Password--%>
-                        <%--                                            </button>--%>
-                        <%--                                        </form>--%>
-                        <%--                                    </div>--%>
-                        <%--                                </div>--%>
                         <div class="tab-pane fade" id="account-change-password">
                             <form action="./ServletPassChanging" method="post">
                                 <div class="card-body pb-2">
@@ -191,9 +164,11 @@
                                                     <th class="border-gray-200" scope="col">Mã đơn hàng</th>
                                                     <th class="border-gray-200" scope="col">Ngày đặt hàng</th>
                                                     <th class="border-gray-200" scope="col">Ngày giao hàng</th>
-                                                    <th class="border-gray-200" scope="col">Ngày giao hàng</th>
+                                                    <th class="border-gray-200" scope="col">Số điện thoại</th>
                                                     <th class="border-gray-200" scope="col">Tình trạng</th>
+                                                    <th class="border-gray-200" scope="col">Xác thực đơn hàng</th>
                                                     <th class="border-gray-200" scope="col">Thao tác</th>
+                                                    <th class="border-gray-200" scope="col">Xem chi tiết</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -213,12 +188,16 @@
                                                     </td>
                                                     <td><span class="badge bg-light text-dark">Đang giao hàng</span>
                                                     </td>
+                                                    <td><%=OrderDAO.showResult_isVerifyOrder(order.getId())%></td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary view-details-btn"
                                                                 data-toggle="modal" data-target="#orderDetailsModal"
                                                                 data-order-id="<%= order.getId() %>">
                                                             Xem Chi tiết
                                                         </button>
+                                                    </td>
+                                                    <td>
+
                                                     </td>
                                                 </tr>
                                                 <%}%>
@@ -229,6 +208,41 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="tab-pane fade" id="key-management">
+                            <div class="card-body pb-2">
+                                <div class="card mb-4">
+                                    <div class="card-header">Key Management</div>
+                                    <div class="card-body">
+                                        <form action="./ServletGenerateKey" method="post">
+                                            <button type="submit" class="btn btn-primary">Generate New Key Pair</button>
+                                        </form>
+                                        <div class="mt-3">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Public Key</th>
+                                                    <th>Created Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <c:forEach items="${publicKeys}" var="key">
+                                                    <tr>
+                                                        <td><c:out value="${key.public_key}"/></td>
+                                                        <td><c:out value="${key.created_date}"/></td>
+                                                        <td><c:out
+                                                                value="${key.is_active ? 'Active' : 'Inactive'}"/></td>
+                                                    </tr>
+                                                </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

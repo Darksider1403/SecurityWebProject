@@ -3,6 +3,7 @@ package DAO;
 import Model.*;
 import org.jdbi.v3.core.Jdbi;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public class OrderDAO {
@@ -63,9 +64,14 @@ public class OrderDAO {
         Order order = JDBI.withHandle(handle ->
                 handle.createQuery("SELECT o.id, a.fullname, o.dateBuy, o.dateArrival, o.address, o.numberPhone, o.status" +
                                 " From accounts a INNER JOIN orders o ON a.id = o.idAccount Where o.id = ?")
-                        .bind(0, idOrder).mapToBean(Order.class).first());
+                        .bind(0, idOrder)
+                        .mapToBean(Order.class)
+                        .findFirst() // Using findFirst() instead of first(), which returns an Optional
+                        .orElse(null) // Return null if no order is found
+        );
         return order;
     }
+
 
     public static List<Order_detail> orderDetailList(String idOrder) {
         JDBI = ConnectJDBI.connector();
@@ -217,5 +223,75 @@ public class OrderDAO {
                 handle.createQuery("SELECT o.id, a.fullname, o.dateBuy, o.dateArrival, o.address, o.numberPhone, o.status " +
                         "From accounts a INNER JOIN orders o ON a.id = o.idAccount ").mapToBean(Order.class).stream().toList());
         return orderList;
+    }
+
+    public static String showResult_isVerifyOrder(String idOrder) {
+        Jdbi jdbi = ConnectJDBI.connector();
+
+        try {
+            int verifyValue = jdbi.withHandle(handle ->
+                    handle.createQuery("SELECT is_verified FROM orders WHERE id = :idOrder")
+                            .bind("idOrder", idOrder)
+                            .mapTo(Integer.class)
+                            .findOne()
+                            .orElse(0)
+            );
+
+            return verifyValue == 1 ? "Đã xác thực" : "Chưa xác thực";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Chưa xác thực";
+        }
+    }
+
+    public static String checkIfOrderNeedsReverification(String idOrder, int currentUserId) {
+        Jdbi jdbi = ConnectJDBI.connector();
+
+        try {
+            return jdbi.withHandle(handle -> {
+                // Query to get order details and the latest key change time
+                return handle.createQuery(
+                                "SELECT o.idAccount, o.last_verified_time, k.key_change_time " +
+                                        "FROM orders o " +
+                                        "JOIN user_keys k ON o.idAccount = k.user_id " +
+                                        "WHERE o.id = :idOrder AND k.is_active = 1")
+                        .bind("idOrder", idOrder)
+                        .map((rs, ctx) -> {
+                            int orderOwnerId = rs.getInt("idAccount");
+                            Timestamp lastVerifiedTime = rs.getTimestamp("last_verified_time");
+                            Timestamp keyChangeTime = rs.getTimestamp("key_change_time");
+
+                            if (orderOwnerId != currentUserId) {
+                                return "Warning: Data changed by another user.";
+                            }
+
+                            if (lastVerifiedTime == null || keyChangeTime.after(lastVerifiedTime)) {
+                                return "Re-verification required: Key has been updated since last verification.";
+                            }
+
+                            return "Order is still verified.";
+                        })
+                        .findOne()
+                        .orElse("Order not found.");
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error checking order verification status.";
+        }
+    }
+
+    public static void main(String[] args) {
+        String orderId = "OR05";
+        int currentUserId = 30;
+
+        // Call the method to verify the order
+//        String verifyValue = showResult_isVerifyOrder(orderId);
+
+        String checkIfOrderNeedsReverification = checkIfOrderNeedsReverification(orderId, currentUserId);
+
+        // Display the result
+//        System.out.println("Verify value for order ID " + orderId + ": " + verifyValue);
+        System.out.println("Check value for order ID " + orderId + ": " + checkIfOrderNeedsReverification);
     }
 }

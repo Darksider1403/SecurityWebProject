@@ -54,15 +54,6 @@
             </form>
 
             <div class="third-party-login">
-                <div class="or-text">
-                    <div class="thin-line"></div>
-                    <span class="upercase-text">Hoặc</span>
-                    <div class="thin-line"></div>
-                </div>
-                <a class="loginBtn loginBtn--facebook"
-                   href="https://www.facebook.com/dialog/oauth?client_id=3242053589264809&redirect_uri=https://localhost:8080/LoginFacebookHandler">
-                    Login with Facebook
-                </a>
                 <a class="loginBtn loginBtn--google"
                    href="https://accounts.google.com/o/oauth2/auth?scope=openid%20profile%20email&redirect_uri=http://localhost:8080/LoginGoogleHandler&response_type=code&client_id=1009898544213-079sof1bo2lnn9a1hr0aaumie5kd7vvs.apps.googleusercontent.com&approval_prompt=force">
                     Login with Google

@@ -9,7 +9,7 @@ public class Product {
     private String size;
     private String color;
     private String gender;
-    private boolean status;
+    private int status;
 
     private String id_category;
 
@@ -17,7 +17,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String id, String name, int price, int quantity, String material, String size, String color, String gender, boolean status, String id_category) {
+    public Product(String id, String name, int price, int quantity, String material, String size, String color, String gender, int status, String id_category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -103,11 +103,11 @@ public class Product {
         this.id_category = id_category;
     }
 
-    public boolean isStatus() {
+    public int isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

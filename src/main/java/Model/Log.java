@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Log {
@@ -12,12 +13,12 @@ public class Log {
     private String value;
     private String country;
     private String status;
-    private Timestamp date;
+    private Date date;
 
     public Log() {
     }
 
-    public Log(int id, Log_Level level, String address, String ip, String preValue, String value, String country, String status, Timestamp date) {
+    public Log(int id, Log_Level level, String address, String ip, String preValue, String value, String country, String status, Date date) {
         this.id = id;
         Level = level;
         this.address = address;
@@ -93,11 +94,11 @@ public class Log {
         this.status = status;
     }
 
-    public Timestamp getCreateAt() {
+    public Date getDate() {
         return date;
     }
 
-    public void setCreateAt(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

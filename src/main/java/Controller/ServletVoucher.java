@@ -35,6 +35,6 @@ public class ServletVoucher extends HttpServlet {
         }
 
         // Redirect back to the order page
-        resp.sendRedirect("order.jsp");
+        resp.sendRedirect("order");
     }
 }

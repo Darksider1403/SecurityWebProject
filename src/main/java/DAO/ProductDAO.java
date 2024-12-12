@@ -311,7 +311,7 @@ public class ProductDAO {
         JDBI = ConnectJDBI.connector();
         try {
             return JDBI.withHandle(handle -> {
-                String sql = "SELECT p.id, p.name, p.price, p.quantity, p.material, p.gender, p.idCategory " +
+                String sql = "SELECT p.id, p.name, p.price, p.quantity, p.size, p.color, p.material, p.gender, p.idCategory " +
                         "FROM products p " +
                         "WHERE p.id = :id";
                 return handle.createQuery(sql)

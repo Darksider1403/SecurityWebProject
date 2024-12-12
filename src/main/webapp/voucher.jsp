@@ -17,10 +17,48 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <style>
+    /* Modal styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 999; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    .btn-close .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .btn-close .close:hover,
+    .btn-close .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <%
   Account account = session.getAttribute("account") == null ? new Account() : (Account) session.getAttribute("account");
   List<Voucher> vouchers = VoucherService.getInstance().getVouchers();
+  String notify = (String) request.getAttribute("notify");
 %>
 <body>
 <div id="main">
@@ -28,48 +66,54 @@
     <div class="left">
       <div class="menu">
         <div class="menu-title">
-          <div class="logo">
-            <a href="./home"><img src="./assets/logo.svg" alt=""></a>
-          </div>
-          <h2 class="shop-name"><a href="">PLQ SHOP</a></h2>
+          <h2 class="shop-name">PLQ SHOP</h2>
         </div>
         <div class="shop-user">
-          <p>Xin chào, <%= account.getFullname() %></p>
+          <p>Xin chào, <%=account.getFullname()%>
+          </p>
         </div>
         <div class="menu-item">
-          <a href="./admin" class="active">
+          <a href="./admin">
             <div class="icon"><i class="fa-solid fa-house-chimney"></i></div>
             <p class="menu-content">Thống kê</p>
           </a>
         </div>
         <div class="menu-item">
-          <a href="./managerAccount?page=1">
+          <a href="./managerAccount" >
             <div class="icon"><i class="fa-solid fa-desktop"></i></div>
             <p class="menu-content">Quản lý tài khoản</p>
           </a>
         </div>
         <div class="menu-item">
-          <a href="./managerProduct?page=1">
+          <a href="./managerProduct">
             <div class="icon"><i class="fa-regular fa-calendar-days"></i></div>
             <p class="menu-content">Quản lý sản phẩm</p>
           </a>
         </div>
         <div class="menu-item">
-          <a href="./managerOrder?page=1">
+          <a href="./managerOrder">
             <div class="icon"><i class="fa-solid fa-clipboard"></i></div>
             <p class="menu-content">Quản lý đơn hàng</p>
           </a>
         </div>
         <div class="menu-item">
-          <a href="/managerLog?page=1">
+
+          <a href="./managerLog">
             <div class="icon"><i class="fa-solid fa-file-alt"></i></div>
             <p class="menu-content">Quản lý nhật ký</p>
           </a>
         </div>
-        <div class="menu-item">
-          <a href="./createVoucher?page=1">
+        <div class="menu-item" >
+          <a href="./createVoucher?page=1" class="active">
             <div class="icon"><i class="fa-solid fa-gift"></i></div>
             <p class="menu-content">Quản lý Voucher</p>
+          </a>
+        </div>
+        <div class="menu-item">
+          <a href="./managerComment?page=1">
+            <div class="icon"><i class="fa-solid fa-comment"></i></div>
+            <p class="menu-content">Quản lý bình luận</p>
+
           </a>
         </div>
         <div class="menu-item">
@@ -86,6 +130,14 @@
         </div>
         <div class="manager">
           <div class="manager-infor">
+            <% if (notify != null && !notify.isEmpty()) { %>
+            <div id="notifyModal" class="modal" style="display: flex;">
+              <div class="modal-content">
+                <div class="btn-close" onclick="closeNotifyModal()"><span class="close">&times;</span></div>
+                <p style="text-align: center; margin: 40px 0px; font-size: 20px;"><%= notify %></p>
+              </div>
+            </div>
+            <% } %>
             <table id="myTable">
               <thead>
               <tr>
@@ -152,13 +204,9 @@
     document.getElementById("myModal").style.display = "none";
   }
 
-  document.getElementById("voucherForm").addEventListener("submit", function(event) {
-    // Prevent default form submission
-    event.preventDefault();
-
-    // Perform form submission via JavaScript
-    this.submit();
-  });
+  function closeNotifyModal() {
+    document.getElementById("notifyModal").style.display = "none";
+  }
 
   $(document).ready(function() {
     $('#myTable').DataTable();

@@ -73,6 +73,18 @@
                     </a>
                 </div>
                 <div class="menu-item">
+                    <a href="./managerLog">
+                        <div class="icon"><i class="fa-solid fa-file-alt"></i></div>
+                        <p class="menu-content">Quản lý nhật ký</p>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="./createVoucher?page=1">
+                        <div class="icon"><i class="fa-solid fa-gift"></i></div>
+                        <p class="menu-content">Quản lý Voucher</p>
+                    </a>
+                </div>
+                <div class="menu-item">
                     <a href="./managerComment?page=1" class="active">
                         <div class="icon"><i class="fa-solid fa-comment"></i></div>
                         <p class="menu-content">Quản lý bình luận</p>
@@ -101,20 +113,15 @@
                                 <th>Số điện thoại</th>
                                 <th>Nội dung bình luận</th>
                                 <th>Ngày bình luận</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                <th>ID sản phẩm</th>
+<%--                                <th>Thao tác</th>--%>
                             </tr>
                             </thead>
                             <tbody>
                             <% for (Comment c : commentList) {
                                 if (c.getStatus() == 0) {
-                                    int status = feedbackAndRatingService.getStatusComment(account.getID());
-                                    List<String> idProduct = feedbackAndRatingService.getProductId(account.getID());
-                                    c.setStatus(status);
-                                    c.setIdProduct(String.valueOf(idProduct));
+                                    System.out.println(commentList);
                                 }
-
-                                System.out.println(commentList);
                             %>
                             <% String numberPhone = !c.getNumberPhone().equals("0") ? c.getNumberPhone() : "Chưa cập nhật"; %>
                             <tr>
@@ -128,20 +135,18 @@
                                 </th>
                                 <th><%=c.getDateComment()%>
                                 </th>
-                                <th>
-                                    <select class="status" name="status">
-                                        <% if (c.getStatus() == 1) {%>
-                                        <option value="1" selected>Ẩn bình luận</option>
-                                        <option value="2">Bình thường</option>
-                                        <%} else if (c.getStatus() == 2) {%>
-                                        <option value="1">Ẩn bình luận</option>
-                                        <option value="2" selected>Bình thường</option>
-                                        <%}%>
-                                    </select>
-                                </th>
-                                <th>
-                                    <button type="submit" class="btn-repair">Lưu</button>
-                                </th>
+<%--                                <th>--%>
+<%--                                    <select class="status" name="status">--%>
+<%--                                        <% if (c.getStatus() == 1) {%>--%>
+<%--                                        <option value="1" selected>Ẩn bình luận</option>--%>
+<%--                                        <option value="2">Bình thường</option>--%>
+<%--                                        <%} else if (c.getStatus() == 2) {%>--%>
+<%--                                        <option value="1">Ẩn bình luận</option>--%>
+<%--                                        <option value="2" selected>Bình thường</option>--%>
+<%--                                        <%}%>--%>
+<%--                                    </select>--%>
+<%--                                </th>--%>
+                                <th><%=c.getIdProduct()%> </th>
                             </tr>
                             <%}%>
                             </tbody>

@@ -24,6 +24,6 @@ public class LogServlet extends HttpServlet {
         List<Log> logs = logService.getAllLogs(page);
         request.setAttribute("logs", logs);
 
-        request.getRequestDispatcher("/logManager.jsp").forward(request, response);
+        request.getRequestDispatcher("/ManagerLog.jsp").forward(request, response);
     }
 }

@@ -10,6 +10,9 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="Service.VoucherService" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="org.json.JSONArray" %>
+<%@ page import="org.json.JSONObject" %>
+<%@ page import="Service.GHNApiUtil" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -75,6 +78,11 @@
             font-weight: bold;
             color: #333;
         }
+        .address {
+            display: flex;
+            width: 480px;
+            justify-content: space-between;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" crossorigin="anonymous" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
@@ -83,17 +91,17 @@
 <jsp:include page="header.jsp"></jsp:include>
 
 <div class="container">
+
     <div class="row">
         <div class="col-xl-8">
             <%
                 Account account = (Account) session.getAttribute("account");
                 NumberFormat nf = NumberFormat.getInstance();
                 Double discount = (Double) session.getAttribute("discount");
-                System.out.println(discount);
                 List<CartItems> sanPhams = (List<CartItems>) session.getAttribute("list-sp");
                 double tongGiaTri = 0;
+                int fee = request.getAttribute("fee") == null ? 0 : (int)request.getAttribute("fee");
                 Map<String, String> listImagesThumbnail = ProductService.getInstance().selectImageThumbnail();
-
                 for (CartItems sp : sanPhams) {
                     tongGiaTri += sp.getTotalPrice();
             %>
@@ -156,10 +164,24 @@
                            placeholder="Nhập số điện thoại" aria-label="Số điện thoại" aria-describedby="basic-addon1"
                            pattern="[0-9]{1,10}">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-text">Địa chỉ giao hàng</span>
-                    <textarea name="addressInput" required id="addressInput" class="form-control"
-                              aria-label="With textarea"></textarea>
+                <div class="address">
+                    <div id="selectAddress">
+                        <select id="provinceSelect" onchange="changeProvince()" name="province">
+                            <option value="">Tỉnh/thành phố</option>
+                            <%
+                                JSONArray provinces = (JSONArray) request.getAttribute("provinces");
+                                for (int i = 0; i < provinces.length(); i++) {
+                                    JSONObject province = provinces.getJSONObject(i);
+                                    String provinceName = province.getString("ProvinceName");
+                                    int ProvinceID = province.getInt("ProvinceID");%>
+                            <option value="<%=ProvinceID%>"><%=provinceName%></option>
+                            <%}%>
+                            %>
+                        </select>
+                    </div>
+                    <div id="districtContainer">
+                    </div>
+                    <div id="wardContainer"></div>
                 </div>
                 <div class="row my-4">
                     <div class="col-sm-6">
@@ -193,25 +215,14 @@
                                 <tr>
                                     <td>Chi phí vận chuyển :</td>
                                     <td class="text-end">
-                                        <span class="fw-bold"><%= nf.format(30000) %>đ</span></td>
+                                        <span id="fee" class="fw-bold"><%= nf.format(fee) %>đ</span></td>
                                 </tr>
                                 <tr class="bg-light">
                                     <th>Thanh toán :</th>
-                                    <% if(discount != null && discount > 0) {
-                                        Double grandTotal = (tongGiaTri + 30000) * discount;
-                                    %>
                                     <td class="text-end">
-        <span class="fw-bold">
-            <%= nf.format(grandTotal) %>
-        </span>
-                                    </td>
-                                    <% } else { %>
-                                    <td class="text-end">
-        <span class="fw-bold">
-            <%= nf.format(tongGiaTri + 30000) %>
-        </span>
-                                    </td>
-                                    <% } %>
+        <span id="thanhtoan" class="fw-bold">
+            <%= nf.format(tongGiaTri) %>
+        </span><td/>
                                 </tr>
                                 </tbody>
                             </table>
@@ -235,14 +246,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="voucherForm" action="/voucher" method="post">
-                    <%
+                <form id="voucherForm" action="./voucher" method="post">
+                        <%
                         List<Voucher> voucherList = (List<Voucher>) VoucherService.getInstance().getVouchers();
                         if (voucherList == null || voucherList.isEmpty()) {
                             System.out.println("Null");
                     %>
                     <p>No vouchers available</p>
-                    <%
+                        <%
                     } else {
                         for (Voucher voucher : voucherList) {
                     %>
@@ -253,7 +264,7 @@
                         <p>End Date: <%= voucher.getDateEnd() %></p>
                         <p>Discount: <%= voucher.getDiscount() %></p>
                     </div>
-                    <%
+                        <%
                             }
                         }
                     %>
@@ -274,6 +285,69 @@
             $('#voucherModal').modal('show');
         });
     });
+
+    function changeProvince() {
+        var ProvinceID = document.getElementById("provinceSelect").value;
+        $.ajax({
+            url: "order",
+            type: "POST",
+            data: {
+                ProvinceID: ProvinceID
+            },
+            success: function (response) {
+                $("#districtContainer").html(response);
+                $("#wardContainer").html('<select id="wardSelect" name="ward"><option>Xã</option></select>');
+            }
+        })
+    }
+
+    function changeDistrict() {
+        var DistrictID = document.getElementById("districtSelect").value;
+        $.ajax({
+            url: "order",
+            type: "POST",
+            data: {
+                DistrictID: DistrictID
+            },
+            success: function (response) {
+                $("#wardContainer").html(response);
+            }
+        })
+    }
+
+
+    function checkSelection() {
+        var ProvinceID = document.getElementById("provinceSelect").value;
+        var DistrictID = document.getElementById("districtSelect").value;
+        var WardId = document.getElementById("wardSelect").value;
+
+        if (!isNaN(ProvinceID) && !isNaN(DistrictID) && !isNaN(WardId)) {;
+            $.ajax({
+                url: "fee",
+                type: "POST",
+                data: {
+                    ProvinceID: ProvinceID,
+                    DistrictID: DistrictID,
+                    WardId: WardId
+                },
+                success: function (response) {
+                    var fees = document.getElementById("fee");
+                    var fee = parseInt(response.fee);
+                    fees.innerHTML = fee + "đ";
+                    var grandTotal = (<%=tongGiaTri%> + fee) * <%=discount%>;
+                    <% if(discount != null && discount > 0) {%>
+                    grandTotal = (<%=tongGiaTri%> + fee) * <%=discount%>;
+
+                    <%} else {%>
+                    grandTotal = <%=tongGiaTri%> + fee;
+                    <%}%>
+
+                    var thanhtoan = document.getElementById("thanhtoan");
+                    thanhtoan.innerHTML = grandTotal + "đ";
+                }
+            })
+        }
+    }
 </script>
 <jsp:include page="footer.jsp"/>
 </body>

@@ -11,6 +11,7 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>Document</title>
     <link
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap"
@@ -132,13 +133,10 @@
             </p>
 
             <div class="order">
-                <form action="AddToCartServlet" method="post">
-                    <a class="btn btn-primary btn-lg"
-                       href="AddToCartServlet?masanpham=<%=selectedProduct.getId()%>">
-                        <i class="fas fa-cart-plus"></i>Thêm sản
-                        phẩm
-                    </a>
-                </form>
+                <button class="btn btn-primary btn-lg" onclick="addToCart('<%= selectedProduct.getId() %>')">
+                    <i class="fa-solid fa-shopping-cart"></i>
+                    <span class="cart-text">Thêm vào giỏ hàng</span>
+                </button>
             </div>
         </div>
 
@@ -323,6 +321,31 @@
                 }
             });
         });
+    });
+    function addToCart(productId) {
+        $.ajax({
+            url: './AddToCartServlet',
+            method: 'POST',
+            data: { masanpham: productId },
+            success: function (response) {
+                if (response.success) {
+                    $('#cart-size').text(response.cartSize);
+                } else {alert("Failed to add item to cart.");
+                } }
+        });
+    }function updateCartSize() {
+        $.ajax({
+            url: './CartSizeServlet',
+            method: 'GET',
+            success: function (response) {
+                $('#cart-size').text(response.cartSize);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Initial call to set the cart size on page load
+        updateCartSize();
     });
 </script>
 

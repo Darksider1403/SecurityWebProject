@@ -253,7 +253,7 @@
 }
 
 .loginBtn--google {
-    left: 194px;
+    margin-top: 20px;
     top: -40px;
     transform: translate(0px, 4px);
     transition: none 0s ease 0s;

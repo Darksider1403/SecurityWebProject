@@ -99,13 +99,16 @@
                         <div class="product-detail">
                             <p class="product-price"><%= nf.format(product.getPrice()) %>đ</p>
                             <div class="order">
-                                <button onclick="addToCart('<%= product.getId() %>')">Add to Cart</button>
+                                <button onclick="addToCart('<%= product.getId() %>')">
+                                    <i class="fa-solid fa-shopping-cart"></i>
+                                </button>
                             </div>
                             <span class="rating">
-                                    <span class="rating-value"></span>
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
+        <span class="rating-value"></span>
+        <i class="fa-solid fa-star"></i>
+    </span>
                         </div>
+
 
                         <a href="productDetail?id=<%= product.getId() %>" class="product-order">Xem chi tiết</a>
 
@@ -146,12 +149,14 @@
                         <div class="product-detail">
                             <p class="product-price"><%= nf.format(product.getPrice()) %>đ</p>
                             <div class="order">
-                                <button onclick="addToCart('<%= product.getId() %>')">Add to Cart</button>
+                                <button onclick="addToCart('<%= product.getId() %>')">
+                                    <i class="fa-solid fa-shopping-cart"></i>
+                                </button>
                             </div>
                             <span class="rating">
-<%--                                    <span class="rating-value"><%= product.getRating() %></span>--%>
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
+        <span class="rating-value"></span>
+        <i class="fa-solid fa-star"></i>
+    </span>
                         </div>
                         <a href="productDetail?id=<%= product.getId() %>" class="product-order">Xem chi tiết</a>
                     </div>
@@ -190,12 +195,14 @@
                         <div class="product-detail">
                             <p class="product-price"><%= nf.format(product.getPrice()) %>đ</p>
                             <div class="order">
-                                <button onclick="addToCart('<%= product.getId() %>')">Add to Cart</button>
+                                <button onclick="addToCart('<%= product.getId() %>')">
+                                    <i class="fa-solid fa-shopping-cart"></i>
+                                </button>
                             </div>
                             <span class="rating">
-<%--                                    <span class="rating-value"><%= product.getRating() %></span>--%>
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
+        <span class="rating-value"></span>
+        <i class="fa-solid fa-star"></i>
+    </span>
                         </div>
                         <a href="productDetail?id=<%= product.getId() %>" class="product-order">Xem chi tiết</a>
                     </div>
@@ -234,12 +241,14 @@
                         <div class="product-detail">
                             <p class="product-price"><%= nf.format(product.getPrice()) %>đ</p>
                             <div class="order">
-                                <button onclick="addToCart('<%= product.getId() %>')">Add to Cart</button>
+                                <button onclick="addToCart('<%= product.getId() %>')">
+                                    <i class="fa-solid fa-shopping-cart"></i>
+                                </button>
                             </div>
                             <span class="rating">
-<%--                                    <span class="rating-value"><%= product.getRating() %></span>--%>
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
+        <span class="rating-value"></span>
+        <i class="fa-solid fa-star"></i>
+    </span>
                         </div>
                         <a href="productDetail?id=<%= product.getId() %>" class="product-order">Xem chi tiết</a>
                     </div>

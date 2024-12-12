@@ -69,7 +69,7 @@ public class CheckQuantityServlet extends HttpServlet {
             return;
         }
 
-        resp.sendRedirect("order.jsp");
+        resp.sendRedirect("order");
     }
 
 

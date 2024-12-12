@@ -51,19 +51,19 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a href="./managerAccount?page=1">
+                    <a href="./managerAccount">
                         <div class="icon"><i class="fa-solid fa-desktop"></i></div>
                         <p class="menu-content">Quản lý tài khoản</p>
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a href="./managerProduct?page=1">
+                    <a href="./managerProduct">
                         <div class="icon"><i class="fa-regular fa-calendar-days"></i></div>
                         <p class="menu-content">Quản lý sản phẩm</p>
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a href="./managerOrder?page=1">
+                    <a href="./managerOrder">
                         <div class="icon"><i class="fa-solid fa-clipboard"></i></div>
                         <p class="menu-content">Quản lý đơn hàng</p>
                     </a>
@@ -79,8 +79,10 @@
                     <a href="./createVoucher?page=1">
                         <div class="icon"><i class="fa-solid fa-gift"></i></div>
                         <p class="menu-content">Quản lý Voucher</p>
-
-                    <a href="./managerComment?page=1">
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="/managerComment?page=1">
                         <div class="icon"><i class="fa-solid fa-comment"></i></div>
                         <p class="menu-content">Quản lý bình luận</p>
 

@@ -69,7 +69,9 @@
                     <a href="./createVoucher?page=1">
                         <div class="icon"><i class="fa-solid fa-gift"></i></div>
                         <p class="menu-content">Quản lý Voucher</p>
-
+                        </a>
+                </div>
+                <div class="menu-item">
                     <a href="./managerComment?page=1">
                         <div class="icon"><i class="fa-solid fa-comment"></i></div>
                         <p class="menu-content">Quản lý bình luận</p>
@@ -130,22 +132,22 @@
                                                 <option value="1" selected>Người dùng</option>
                                                 <option value="2">Quản lý đơn hàng</option>
                                                 <option value="3">Quản lí sản phẩm</option>
-                                                <option value="4">Admin</option>
+                                                <option value="0">Admin</option>
                                                 <%} else if (account.getRole() == 2) {%>
                                                 <option value="1">Người dùng</option>
                                                 <option value="2" selected>Quản lý đơn hàng</option>
                                                 <option value="3">Quản lí sản phẩm</option>
-                                                <option value="4">Admin</option>
+                                                <option value="0">Admin</option>
                                                 <%} else if (account.getRole() == 3) {%>
                                                 <option value="1">Người dùng</option>
                                                 <option value="2">Quản lý đơn hàng</option>
                                                 <option value="3" selected>Quản lí sản phẩm</option>
-                                                <option value="4">Admin</option>
-                                                <%} else if (account.getRole() == 4) {%>
+                                                <option value="0">Admin</option>
+                                                <%} else if (account.getRole() == 0) {%>
                                                 <option value="1">Người dùng</option>
                                                 <option value="2">Quản lý đơn hàng</option>
                                                 <option value="3">Quản lí sản phẩm</option>
-                                                <option value="4" selected>Admin</option>
+                                                <option value="0" selected>Admin</option>
                                                 <%}%>
                                             </select>
                                         </label>

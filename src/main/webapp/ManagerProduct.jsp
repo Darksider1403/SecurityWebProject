@@ -82,7 +82,10 @@
                     <a href="./createVoucher?page=1">
                         <div class="icon"><i class="fa-solid fa-gift"></i></div>
                         <p class="menu-content">Quản lý Voucher</p>
+                        </a>
 
+                </div>
+                <div class="menu-item">
                     <a href="./managerComment?page=1">
                         <div class="icon"><i class="fa-solid fa-comment"></i></div>
                         <p class="menu-content">Quản lý bình luận</p>
@@ -135,15 +138,19 @@
                                 <form action="./managerProduct" method="post">
                                     <th scope="row">
                                         <select class="status" name="status">
-                                            <% if (p.isStatus()) {%>
+                                            <% if (p.isStatus() == 1) {%>
                                             <option value="1" selected>Đang bán</option>
                                             <option value="2">Ngưng bán</option>
                                             <option value="3">Hết hàng</option>
-                                            <%} else {%>
+                                            <%} else if(p.isStatus() == 2) {%>
                                             <option value="1">Đang bán</option>
                                             <option value="2" selected>Ngưng bán</option>
                                             <option value="3">Hết hàng</option>
-                                            <%}%>
+                                            <%} else {%>
+                                            <option value="1">Đang bán</option>
+                                            <option value="2" >Ngưng bán</option>
+                                            <option value="3" selected>Hết hàng</option>
+                                                    <%}%>
                                         </select>
                                     </th>
                                     <th>
