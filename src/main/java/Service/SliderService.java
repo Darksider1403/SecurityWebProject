@@ -1,6 +1,7 @@
 package Service;
-import Model.Slider;
+
 import DAO.SliderDAO;
+import Model.Slider;
 
 import java.util.List;
 

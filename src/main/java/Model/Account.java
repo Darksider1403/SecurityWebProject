@@ -4,10 +4,6 @@ package Model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class Account {
     private static final Log log = LogFactory.getLog(Account.class);
     private int ID;

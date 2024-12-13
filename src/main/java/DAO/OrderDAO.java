@@ -1,10 +1,18 @@
 package DAO;
 
-import Model.*;
+import Model.CartItems;
+import Model.Order;
+import Model.Order_detail;
+import Model.Product;
 import org.jdbi.v3.core.Jdbi;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public class OrderDAO {
     private static Jdbi JDBI;
@@ -98,7 +106,7 @@ public class OrderDAO {
         Jdbi jdbi = ConnectJDBI.connector();
         try {
             return jdbi.withHandle(handle -> {
-                String sql = "SELECT od.id, od.address, od.status, od.idAccount, od.dateBuy,od.dateArrival,od.numberPhone" +
+                String sql = "SELECT od.id, od.address, od.status, od.idAccount, od.dateBuy,od.dateArrival,od.numberPhone,od.is_verified" +
                         " FROM orders od " +
                         " WHERE od.idAccount = :id_account";
 
@@ -281,17 +289,49 @@ public class OrderDAO {
         }
     }
 
+    public Optional<String> getOrderDetails(String orderId) {
+        Jdbi jdbi = ConnectJDBI.connector();
+        try {
+            return jdbi.withHandle(handle -> {
+                List<String> orderDetailsList = handle.createQuery(
+                                "SELECT " +
+                                        "OD.idProduct, " +
+                                        "OD.quantity, " +
+                                        "OD.price, " +
+                                        "S.Signature, " +
+                                        "UK.public_key " +
+                                        "FROM order_details OD " +
+                                        "JOIN orders O ON O.id = OD.idOrder " +
+                                        "JOIN signature S ON S.id_order = OD.idOrder " +
+                                        "JOIN user_keys UK ON UK.user_id = O.idAccount " +
+                                        "WHERE OD.idOrder = :orderId")
+                        .bind("orderId", orderId)
+                        .map((rs, ctx) -> String.format(
+                                "Product ID: %s, Quantity: %d, Price: %d, Signature: %s, Public Key: %s",
+                                rs.getString("idProduct"),
+                                rs.getInt("quantity"),
+                                rs.getInt("price"),
+                                rs.getString("Signature"),
+                                rs.getString("public_key")
+                        ))
+                        .list();
+
+                // Combine multiple results into a single string if multiple exist
+                if (!orderDetailsList.isEmpty()) {
+                    return Optional.of(String.join("; ", orderDetailsList));
+                }
+                return Optional.empty();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+
     public static void main(String[] args) {
-        String orderId = "OR05";
-        int currentUserId = 30;
+        OrderDAO od = new OrderDAO();
+        System.out.println(od.getOrderDetails("OR016"));
 
-        // Call the method to verify the order
-//        String verifyValue = showResult_isVerifyOrder(orderId);
-
-        String checkIfOrderNeedsReverification = checkIfOrderNeedsReverification(orderId, currentUserId);
-
-        // Display the result
-//        System.out.println("Verify value for order ID " + orderId + ": " + verifyValue);
-        System.out.println("Check value for order ID " + orderId + ": " + checkIfOrderNeedsReverification);
     }
 }

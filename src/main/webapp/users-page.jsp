@@ -4,7 +4,6 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="Model.Order_detail" %>
 <%@ page import="java.util.*" %>
-<%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -48,13 +47,13 @@
                            href="#account-change-password">Thay đổi mật khẩu</a>
                         <a class="list-group-item list-group-item-action" data-toggle="list"
                            href="#shopping-order">Thông tin đơn hàng</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
-                           href="#key-management">Quản lý khóa</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#key-management">Quản lý khóa</a>
                     </div>
                 </div>
                 <%
                     Account account = (Account) session.getAttribute("account");
                     List<Order> orderListSS = OrderService.getInstance().showOrder(account.getID());
+
                 %>
                 <div class="col-md-9">
                     <div class="tab-content">
@@ -161,34 +160,25 @@
                                             <table class="table mb-0">
                                                 <thead>
                                                 <tr>
-                                                    <th class="border-gray-200" scope="col">Mã đơn hàng</th>
-                                                    <th class="border-gray-200" scope="col">Ngày đặt hàng</th>
-                                                    <th class="border-gray-200" scope="col">Ngày giao hàng</th>
-                                                    <th class="border-gray-200" scope="col">Số điện thoại</th>
-                                                    <th class="border-gray-200" scope="col">Tình trạng</th>
-                                                    <th class="border-gray-200" scope="col">Xác thực đơn hàng</th>
-                                                    <th class="border-gray-200" scope="col">Thao tác</th>
-                                                    <th class="border-gray-200" scope="col">Xem chi tiết</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Mã đơn hàng</th>
+
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Ngày đặt hàng</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Ngày giao hàng</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">SĐT </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Tình trạng </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Chi tiết </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Xac nhan </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <% if (orderListSS == null) { System.out.println("null"); } %>
+                                                <% for (Order order : orderListSS) { %>
                                                 <tr>
-                                                    <%
-                                                        if (orderListSS == null) {
-                                                            System.out.println("null");
-                                                        }
-                                                        for (Order order : orderListSS) {
-                                                    %>
-                                                    <td><%=order.getId()%>
-                                                    <td><%=order.getDateBuy()%>
-                                                    </td>
-                                                    <td><%=order.getDateArrival()%>
-                                                    </td>
-                                                    <td><%=order.getNumberPhone()%>
-                                                    </td>
-                                                    <td><span class="badge bg-light text-dark">Đang giao hàng</span>
-                                                    </td>
-                                                    <td><%=OrderDAO.showResult_isVerifyOrder(order.getId())%></td>
+                                                    <td><%= order.getId() %></td>
+                                                    <td><%= order.getDateBuy() %></td>
+                                                    <td><%= order.getDateArrival() %></td>
+                                                    <td><%= order.getNumberPhone() %></td>
+                                                    <td><span class="badge bg-light text-dark">Đang giao hàng</span></td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary view-details-btn"
                                                                 data-toggle="modal" data-target="#orderDetailsModal"
@@ -197,12 +187,27 @@
                                                         </button>
                                                     </td>
                                                     <td>
+                                                        <% if (order.getIs_verified() == 0) { %>
+                                                        <span class="text-danger">Chưa xác nhận</span>
+                                                        <% } else if (order.getIs_verified() == 1) { %>
+                                                        <span class="text-success">Đã xác nhận</span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Form to trigger signature verification -->
+                                                        <form action="./ServletSignatureVerify" method="post">
+                                                            <input type="hidden" name="orderId" value="<%= order.getId() %>" />
+                                                            <button type="submit" class="btn btn-info">
+                                                                Xác minh chữ ký
+                                                            </button>
 
+                                                        </form>
                                                     </td>
                                                 </tr>
-                                                <%}%>
+                                                <% } %>
                                                 </tbody>
                                             </table>
+
                                         </div>
                                     </div>
                                 </div>
@@ -231,8 +236,7 @@
                                                     <tr>
                                                         <td><c:out value="${key.public_key}"/></td>
                                                         <td><c:out value="${key.created_date}"/></td>
-                                                        <td><c:out
-                                                                value="${key.is_active ? 'Active' : 'Inactive'}"/></td>
+                                                        <td><c:out value="${key.is_active ? 'Active' : 'Inactive'}"/></td>
                                                     </tr>
                                                 </c:forEach>
                                                 </tbody>
@@ -394,6 +398,8 @@
             }
         });
     });
+
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 
