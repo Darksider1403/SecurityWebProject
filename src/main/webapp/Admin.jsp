@@ -82,12 +82,19 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a href="/managerComment?page=1">
+                    <a href="./managerComment?page=1">
                         <div class="icon"><i class="fa-solid fa-comment"></i></div>
                         <p class="menu-content">Quản lý bình luận</p>
-
                     </a>
                 </div>
+
+                <div class="menu-item">
+                    <a href="./managerKeyReports">
+                        <div class="icon"><i class="fa-solid fa-key"></i></div>
+                        <p class="menu-content">Quản lý Key Reports</p>
+                    </a>
+                </div>
+
                 <div class="menu-item">
                     <a href="./ServletLogOut">
                         <p class="menu-content">Đăng xuất</p>

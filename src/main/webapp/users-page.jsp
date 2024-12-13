@@ -1,8 +1,6 @@
 <%@ page import="Model.Account" %>
 <%@ page import="Model.Order" %>
 <%@ page import="Service.OrderService" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="Model.Order_detail" %>
 <%@ page import="java.util.*" %>
 <%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
@@ -29,10 +27,87 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"></script>
-    <script src="js/productDetail.js"></script>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="css/templatemo.css">
     <script src="js/templatemo.js"></script>
+
+    <style>
+        .modal-content {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            padding: 1rem 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            color: #495057;
+        }
+
+        .alert-info {
+            background-color: #e3f2fd;
+            border-color: #bee5eb;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .fa-info-circle {
+            color: #0d6efd;
+            margin-right: 8px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+            padding: 8px 24px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-warning:hover {
+            background-color: #ffb300;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 8px 24px;
+            margin-right: 8px;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Center modal */
+        .modal-dialog {
+            position: relative;
+            top: 25vh;
+        }
+
+        .btn-close:focus {
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -42,13 +117,13 @@
             <div class="row no-gutters row-bordered row-border-light">
                 <div class="col-md-3 pt-0">
                     <div class="list-group list-group-flush account-settings-links">
-                        <a class="list-group-item list-group-item-action active" data-toggle="list"
+                        <a class="list-group-item list-group-item-action active" data-bs-toggle="list"
                            href="#account-general">Tài khoản</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                        <a class="list-group-item list-group-item-action" data-bs-toggle="list"
                            href="#account-change-password">Thay đổi mật khẩu</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                        <a class="list-group-item list-group-item-action" data-bs-toggle="list"
                            href="#shopping-order">Thông tin đơn hàng</a>
-                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                        <a class="list-group-item list-group-item-action" data-bs-toggle="list"
                            href="#key-management">Quản lý khóa</a>
                     </div>
                 </div>
@@ -188,7 +263,8 @@
                                                     </td>
                                                     <td><span class="badge bg-light text-dark">Đang giao hàng</span>
                                                     </td>
-                                                    <td><%=OrderDAO.showResult_isVerifyOrder(order.getId())%></td>
+                                                    <td><%=OrderDAO.showResult_isVerifyOrder(order.getId())%>
+                                                    </td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary view-details-btn"
                                                                 data-toggle="modal" data-target="#orderDetailsModal"
@@ -212,32 +288,83 @@
                         <div class="tab-pane fade" id="key-management">
                             <div class="card-body pb-2">
                                 <div class="card mb-4">
-                                    <div class="card-header">Key Management</div>
+                                    <div class="card-header">Quản lý khóa</div>
                                     <div class="card-body">
-                                        <form action="./ServletGenerateKey" method="post">
-                                            <button type="submit" class="btn btn-primary">Generate New Key Pair</button>
-                                        </form>
+                                        <c:if test="${not empty message}">
+                                            <div class="alert alert-success" role="alert">${message}</div>
+                                        </c:if>
+                                        <c:if test="${not empty error}">
+                                            <div class="alert alert-danger" role="alert">${error}</div>
+                                        </c:if>
+
                                         <div class="mt-3">
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th>Public Key</th>
-                                                    <th>Created Date</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <c:forEach items="${publicKeys}" var="key">
-                                                    <tr>
-                                                        <td><c:out value="${key.public_key}"/></td>
-                                                        <td><c:out value="${key.created_date}"/></td>
-                                                        <td><c:out
-                                                                value="${key.is_active ? 'Active' : 'Inactive'}"/></td>
-                                                    </tr>
-                                                </c:forEach>
-                                                </tbody>
-                                            </table>
+                                            <c:choose>
+                                                <c:when test="${canGenerateKey}">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            data-bs-target="#generateKeyModal">
+                                                        Tạo khóa mới
+                                                    </button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                                            data-bs-target="#requestKeyModal">
+                                                        Yêu cầu khóa mới
+                                                    </button>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Generate Key Modal -->
+                        <div class="modal fade" id="generateKeyModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Tạo khóa mới</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Bạn có chắc chắn muốn tạo cặp khóa mới không? Khóa riêng của bạn sẽ được tải
+                                            xuống tự động.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ
+                                        </button>
+                                        <form action="./ServletGenerateKey" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-primary">Tạo khoá</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Request Key Modal -->
+                        <div class="modal fade" id="requestKeyModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Yêu cầu khóa mới</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Bạn có muốn yêu cầu khóa mới không? Yêu cầu của bạn sẽ được gửi đến người
+                                            quản trị để phê duyệt.</p>
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            Sau khi gửi yêu cầu, vui lòng đợi quản trị viên chấp thuận trước khi tạo cặp
+                                            khóa mới.
+                                            Khóa hiện tại của bạn sẽ vẫn hoạt động cho đến khi yêu cầu được chấp thuận.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ
+                                        </button>
+                                        <form action="./ServletReportKey" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-warning">Gửi yêu cầu</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -393,6 +520,24 @@
                 $('#message').show().html('Mật khẩu mới khớp').css('color', 'red');
             }
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Bootstrap tabs
+        var triggerTabList = document.querySelectorAll('[data-bs-toggle="list"]');
+        triggerTabList.forEach(function (triggerEl) {
+            new bootstrap.Tab(triggerEl);
+        });
+
+        // Show the correct tab based on URL hash
+        var hash = window.location.hash;
+        if (hash) {
+            const triggerEl = document.querySelector(`a[href="${hash}"]`);
+            if (triggerEl) {
+                const tab = new bootstrap.Tab(triggerEl);
+                tab.show();
+            }
+        }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
