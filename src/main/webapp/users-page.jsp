@@ -326,6 +326,26 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="signatureVerificationModal" tabindex="-1" role="dialog" aria-labelledby="signatureVerificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signatureVerificationModalLabel">Xác minh chữ ký</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="signatureVerificationResult">
+                    0
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="verificationModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -396,6 +416,41 @@
                 $('#submit-pass').prop('disabled', true);
                 $('#message').show().html('Mật khẩu mới khớp').css('color', 'red');
             }
+        });
+    });
+    $(document).ready(function() {
+        // Handle signature verification for each order
+        $('form[action="./ServletSignatureVerify"]').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var form = $(this);
+            var orderId = form.find('input[name="orderId"]').val();
+
+            $.ajax({
+                url: './ServletSignatureVerify',
+                method: 'POST',
+                data: { orderId: orderId },
+                success: function(response) {
+                    // Successful verification
+                    $('#signatureVerificationResult').html(`
+                    <div class="alert alert-success" role="alert">
+                        <strong>Xác minh thành công!</strong><br>
+                        Chữ ký cho đơn hàng ${orderId} là hợp lệ.
+                    </div>
+                `);
+                    $('#signatureVerificationModal').modal('show');
+                },
+                error: function(xhr) {
+                    // Verification failed
+                    $('#signatureVerificationResult').html(`
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Xác minh không thành công!</strong><br>
+                        ${xhr.responseText || 'Đã xảy ra lỗi khi xác minh chữ ký.'}
+                    </div>
+                `);
+                    $('#signatureVerificationModal').modal('show');
+                }
+            });
         });
     });
 
