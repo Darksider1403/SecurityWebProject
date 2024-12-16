@@ -164,25 +164,31 @@
                            placeholder="Nhập số điện thoại" aria-label="Số điện thoại" aria-describedby="basic-addon1"
                            pattern="[0-9]{1,10}">
                 </div>
-                <div class="address">
-                    <div id="selectAddress">
-                        <select id="provinceSelect" onchange="changeProvince()" name="province">
-                            <option value="">Tỉnh/thành phố</option>
-                            <%
-                                JSONArray provinces = (JSONArray) request.getAttribute("provinces");
-                                for (int i = 0; i < provinces.length(); i++) {
-                                    JSONObject province = provinces.getJSONObject(i);
-                                    String provinceName = province.getString("ProvinceName");
-                                    int ProvinceID = province.getInt("ProvinceID");%>
-                            <option value="<%=ProvinceID%>"><%=provinceName%></option>
-                            <%}%>
-                            %>
-                        </select>
-                    </div>
-                    <div id="districtContainer">
-                    </div>
-                    <div id="wardContainer"></div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="">Số Điện Thoại</span>
+                    <input type="text" name="addressInput" required class="form-control" id="addressInput"
+                           placeholder="Nhập địa chỉ đơn hàng" aria-label="Địa chỉ" aria-describedby="basic-addon1"
+                    >
                 </div>
+                <%--                <div class="address">--%>
+                <%--                    <div id="selectAddress">--%>
+                <%--                        <select id="provinceSelect" onchange="changeProvince()" name="province">--%>
+                <%--                            <option value="">Tỉnh/thành phố</option>--%>
+                <%--                            <%--%>
+                <%--                                JSONArray provinces = (JSONArray) request.getAttribute("provinces");--%>
+                <%--                                for (int i = 0; i < provinces.length(); i++) {--%>
+                <%--                                    JSONObject province = provinces.getJSONObject(i);--%>
+                <%--                                    String provinceName = province.getString("ProvinceName");--%>
+                <%--                                    int ProvinceID = province.getInt("ProvinceID");%>--%>
+                <%--                            <option value="<%=ProvinceID%>"><%=provinceName%></option>--%>
+                <%--                            <%}%>--%>
+                <%--                            %>--%>
+                <%--                        </select>--%>
+                <%--                    </div>--%>
+                <%--                    <div id="districtContainer">--%>
+                <%--                    </div>--%>
+                <%--                    <div id="wardContainer"></div>--%>
+                <%--                </div>--%>
                 <div class="row my-4">
                     <div class="col-sm-6">
                         <a href="home.jsp" class="btn btn-link text-muted">
