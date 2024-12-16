@@ -27,10 +27,10 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("slider", sliders);
         List<Product> listProduct = ProductService.getInstance().findByCategory(1);
         List<Product> listProductVai = ProductService.getInstance().findByCategory(2);
-        List<Product> listDauKhoa = ProductService.getInstance().findByCategory(3);
+        List<Product> listDauKhoa = ProductService.getInstance().findByCategory(7);
 
-        List<Product> Nu = ProductService.getInstance().findByGender("Nữ");
-        List<Product> Nam = ProductService.getInstance().findByGender("Nam");
+        List<Product> Nu = ProductService.getInstance().findByCategory(11);
+        List<Product> Nam = ProductService.getInstance().findByCategory(3);
         request.setAttribute("listProduct", listProduct);
         request.setAttribute("listProductVai", listProductVai);
         request.setAttribute("listDauKhoa", listDauKhoa);

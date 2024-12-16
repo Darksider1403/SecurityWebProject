@@ -79,7 +79,7 @@
     </div>
     <div class="bottom-product">
         <div class="left-menu-item">
-            <img src="assets/images/thatlungDa.jpg" alt="">
+            <img src="product/khautrang.png" alt="">
         </div>
         <div class="right-menu-list">
             <div class="slider-product">
@@ -125,14 +125,14 @@
 
 <div class="container" id="Nam-Container">
     <div class="top-prodcut">
-        <div class="title">Khẩu trang</div>
+        <div class="title">Máy massage cầm tay</div>
         <div class="menu-item">
             <div class="menu-item"><a href="./product?category=1&page=1">Xem tất cả</a></div>
         </div>
     </div>
     <div class="bottom-product">
         <div class="left-menu-item">
-            <img src="assets/images/thatlungVai.jpg" alt="">
+            <img src="product/maymassage.png" alt="">
         </div>
         <div class="right-menu-list">
             <div class="slider-product">
@@ -171,14 +171,14 @@
 %>
 <div class="container" id="Nam-Container">
     <div class="top-prodcut">
-        <div class="title">Nữ</div>
+        <div class="title">Máy xông mũi họng</div>
         <div class="menu-item">
             <div class="menu-item"><a href="./product?category=1&page=1">Xem tất cả</a></div>
         </div>
     </div>
     <div class="bottom-product">
         <div class="left-menu-item">
-            <img src="assets/images/thatlungnu.jpg" alt="">
+            <img src="product/mayxongmui.png" alt="">
         </div>
         <div class="right-menu-list">
             <div class="slider-product">
@@ -217,18 +217,64 @@
 %>
 <div class="container" id="Nam-Container">
     <div class="top-prodcut">
-        <div class="title">Nam</div>
+        <div class="title">Máy đo huyết áp</div>
         <div class="menu-item">
             <div class="menu-item"><a href="./product?category=1&page=1">Xem tất cả</a></div>
         </div>
     </div>
     <div class="bottom-product">
         <div class="left-menu-item">
-            <img src="assets/images/nam1.jpg" alt="">
+            <img src="product/maydohuyetap.png" alt="">
         </div>
         <div class="right-menu-list">
             <div class="slider-product">
                     <% for (Product product : Nam) { %>
+                <div class="product-item-home">
+                    <div class="product">
+                        <a href="productDetail?id=<%= product.getId() %>"><img class="product-img"
+                                                                               style="width: 270px;height: 300px"
+                                                                               src="<%=listImagesThumbnail.get(product.getId())%>"
+                                                                               alt=""></a>
+                        <p class="product-title">
+                            <%= product.getName().length() > 20 ? product.getName().substring(0, 20) + "..." : product.getName() %>
+                        </p>
+                        <div class="product-detail">
+                            <p class="product-price"><%= nf.format(product.getPrice()) %>đ</p>
+                            <div class="order">
+                                <button onclick="addToCart('<%= product.getId() %>')">
+                                    <i class="fa-solid fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                            <span class="rating">
+        <span class="rating-value"></span>
+        <i class="fa-solid fa-star"></i>
+    </span>
+                        </div>
+                        <a href="productDetail?id=<%= product.getId() %>" class="product-order">Xem chi tiết</a>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<%
+    List<Product> listDauKhoa = request.getAttribute("listDauKhoa") == null ? new ArrayList<>() : (List<Product>) request.getAttribute("listDauKhoa");
+%>
+<div class="container" id="Nam-Container">
+    <div class="top-prodcut">
+        <div class="title">Máy đo đươờng huyết</div>
+        <div class="menu-item">
+            <div class="menu-item"><a href="./product?category=1&page=1">Xem tất cả</a></div>
+        </div>
+    </div>
+    <div class="bottom-product">
+        <div class="left-menu-item">
+            <img src="product/maydoduong.png" alt="">
+        </div>
+        <div class="right-menu-list">
+            <div class="slider-product">
+                <% for (Product product : listDauKhoa) { %>
                 <div class="product-item-home">
                     <div class="product">
                         <a href="productDetail?id=<%= product.getId() %>"><img class="product-img"

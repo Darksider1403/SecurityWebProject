@@ -165,7 +165,7 @@
                            pattern="[0-9]{1,10}">
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="">Số Điện Thoại</span>
+                    <span class="input-group-text" id="">Địa chỉ đơn hàng</span>
                     <input type="text" name="addressInput" required class="form-control" id="addressInput"
                            placeholder="Nhập địa chỉ đơn hàng" aria-label="Địa chỉ" aria-describedby="basic-addon1"
                     >
