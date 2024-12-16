@@ -125,7 +125,7 @@
 
 <div class="container" id="Nam-Container">
     <div class="top-prodcut">
-        <div class="title">Thắt lưng vải</div>
+        <div class="title">Khẩu trang</div>
         <div class="menu-item">
             <div class="menu-item"><a href="./product?category=1&page=1">Xem tất cả</a></div>
         </div>
