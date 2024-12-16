@@ -3,7 +3,6 @@ package Controller;
 
 import Model.Account;
 import Service.AccountService;
-import Service.EmailService;
 import Service.EncryptService;
 
 import javax.servlet.ServletException;

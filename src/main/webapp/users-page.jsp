@@ -2,7 +2,6 @@
 <%@ page import="Model.Order" %>
 <%@ page import="Service.OrderService" %>
 <%@ page import="java.util.*" %>
-<%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -123,13 +122,16 @@
                            href="#account-change-password">Thay đổi mật khẩu</a>
                         <a class="list-group-item list-group-item-action" data-bs-toggle="list"
                            href="#shopping-order">Thông tin đơn hàng</a>
+
                         <a class="list-group-item list-group-item-action" data-bs-toggle="list"
                            href="#key-management">Quản lý khóa</a>
+
                     </div>
                 </div>
                 <%
                     Account account = (Account) session.getAttribute("account");
                     List<Order> orderListSS = OrderService.getInstance().showOrder(account.getID());
+
                 %>
                 <div class="col-md-9">
                     <div class="tab-content">
@@ -236,18 +238,21 @@
                                             <table class="table mb-0">
                                                 <thead>
                                                 <tr>
-                                                    <th class="border-gray-200" scope="col">Mã đơn hàng</th>
-                                                    <th class="border-gray-200" scope="col">Ngày đặt hàng</th>
-                                                    <th class="border-gray-200" scope="col">Ngày giao hàng</th>
-                                                    <th class="border-gray-200" scope="col">Số điện thoại</th>
-                                                    <th class="border-gray-200" scope="col">Tình trạng</th>
-                                                    <th class="border-gray-200" scope="col">Xác thực đơn hàng</th>
-                                                    <th class="border-gray-200" scope="col">Thao tác</th>
-                                                    <th class="border-gray-200" scope="col">Xem chi tiết</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Mã đơn hàng</th>
+
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Ngày đặt hàng</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Ngày giao hàng</th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">SĐT </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Tình trạng </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Chi tiết </th>
+                                                    <th class="border-gray-200" scope="col" style="text-align: center;">Xac nhan </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <% if (orderListSS == null) { System.out.println("null"); } %>
+                                                <% for (Order order : orderListSS) { %>
                                                 <tr>
+
                                                     <%
                                                         if (orderListSS == null) {
                                                             System.out.println("null");
@@ -265,6 +270,7 @@
                                                     </td>
                                                     <td><%=OrderDAO.showResult_isVerifyOrder(order.getId())%>
                                                     </td>
+
                                                     <td>
                                                         <button type="button" class="btn btn-primary view-details-btn"
                                                                 data-toggle="modal" data-target="#orderDetailsModal"
@@ -273,12 +279,27 @@
                                                         </button>
                                                     </td>
                                                     <td>
+                                                        <% if (order.getIs_verified() == 0) { %>
+                                                        <span class="text-danger">Chưa xác nhận</span>
+                                                        <% } else if (order.getIs_verified() == 1) { %>
+                                                        <span class="text-success">Đã xác nhận</span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Form to trigger signature verification -->
+                                                        <form action="./ServletSignatureVerify" method="post">
+                                                            <input type="hidden" name="orderId" value="<%= order.getId() %>" />
+                                                            <button type="submit" class="btn btn-info">
+                                                                Xác minh chữ ký
+                                                            </button>
 
+                                                        </form>
                                                     </td>
                                                 </tr>
-                                                <%}%>
+                                                <% } %>
                                                 </tbody>
                                             </table>
+
                                         </div>
                                     </div>
                                 </div>
@@ -298,6 +319,7 @@
                                         </c:if>
 
                                         <div class="mt-3">
+
                                             <c:choose>
                                                 <c:when test="${canGenerateKey}">
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -316,6 +338,7 @@
                                             <a href="assets/signatureapp.exe" download class="btn btn-info ms-2">
                                                 <i class="fas fa-download"></i> Tải ứng dụng xác thực
                                             </a>
+
                                         </div>
                                     </div>
                                 </div>
@@ -453,6 +476,26 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="signatureVerificationModal" tabindex="-1" role="dialog" aria-labelledby="signatureVerificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signatureVerificationModalLabel">Xác minh chữ ký</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="signatureVerificationResult">
+                    0
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="verificationModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -526,6 +569,45 @@
         });
     });
 
+    $(document).ready(function() {
+        // Handle signature verification for each order
+        $('form[action="./ServletSignatureVerify"]').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var form = $(this);
+            var orderId = form.find('input[name="orderId"]').val();
+
+            $.ajax({
+                url: './ServletSignatureVerify',
+                method: 'POST',
+                data: { orderId: orderId },
+                success: function(response) {
+                    // Successful verification
+                    $('#signatureVerificationResult').html(`
+                    <div class="alert alert-success" role="alert">
+                        <strong>Xác minh thành công!</strong><br>
+                        Chữ ký cho đơn hàng ${orderId} là hợp lệ.
+                    </div>
+                `);
+                    $('#signatureVerificationModal').modal('show');
+                },
+                error: function(xhr) {
+                    // Verification failed
+                    $('#signatureVerificationResult').html(`
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Xác minh không thành công!</strong><br>
+                        ${xhr.responseText || 'Đã xảy ra lỗi khi xác minh chữ ký.'}
+                    </div>
+                `);
+                    $('#signatureVerificationModal').modal('show');
+                }
+            });
+        });
+    });
+
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize Bootstrap tabs
         var triggerTabList = document.querySelectorAll('[data-bs-toggle="list"]');
@@ -543,6 +625,7 @@
             }
         }
     });
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 

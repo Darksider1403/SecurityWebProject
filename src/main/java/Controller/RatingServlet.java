@@ -1,10 +1,8 @@
 package Controller;
 
-import DAO.RatingDAO;
 import Model.Account;
 import Service.AccountService;
 import Service.FeedbackAndRatingService;
-import Service.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

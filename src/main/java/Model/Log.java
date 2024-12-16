@@ -1,7 +1,6 @@
 package Model;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Log {
     private int id;

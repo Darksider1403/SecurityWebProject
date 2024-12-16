@@ -38,7 +38,7 @@
                 </div>
             </div>
             <ul class="list-item">
-                <li class="item"><a href="./contract">Liên hệ</a></li>
+                <li class="item"><a href="./signature">Kí Tên Điện Tử</a></li>
             </ul>
             <div class="header-contain__method">
                 <a href="./CartServlet" class="header_cart">

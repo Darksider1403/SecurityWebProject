@@ -11,8 +11,6 @@ target/
 *.iws
 *.iml
 *.ipr
-.idea\discord.xml
-.idea\misc.xml
 
 ### Eclipse ###
 .apt_generated
@@ -38,22 +36,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-src/main/resources/db.properties
-src/main/resources/db.properties.properties
-.idea/misc.xml
-/.idea
-.idea/webContexts.xml
-.idea/misc.xml
-.idea/inspectionProfiles/Project_Default.xml
-.idea/jsLibraryMappings.xml
-.idea/discord.xml
-*.xml
-.idea/misc.xml
-*.xml
-.idea/misc.xml
-.idea/inspectionProfiles/Project_Default.xml
-src/main/resources/db.properties
-/src/main/resources
-.idea/webContexts.xml
-.idea/misc.xml
-*.properties

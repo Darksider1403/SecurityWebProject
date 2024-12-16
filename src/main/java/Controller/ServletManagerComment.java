@@ -1,11 +1,8 @@
 package Controller;
 
-import Model.Account;
 import Model.Comment;
-import Service.AccountService;
 import Service.FeedbackAndRatingService;
 import Service.PaginationService;
-import Service.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

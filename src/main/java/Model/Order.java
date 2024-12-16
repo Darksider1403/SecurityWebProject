@@ -11,12 +11,13 @@ public class Order {
     private Date dateArrival;
     String numberPhone;
     private int ID_account;
+    private int is_verified;
 
     public Order() {
         // Default constructor
     }
 
-    public Order(String id, String fullname, String address, int status, Date dateBuy, Date dateArrival, String numberPhone, int ID_account) {
+    public Order(String id, String fullname, String address, int status, Date dateBuy, Date dateArrival, String numberPhone, int ID_account,int is_verified) {
         this.id = id;
         this.fullname = fullname;
         this.address = address;
@@ -25,6 +26,7 @@ public class Order {
         this.dateArrival = dateArrival;
         this.numberPhone = numberPhone;
         this.ID_account = ID_account;
+        this.is_verified=is_verified;
     }
 
     public Order(String id, String fullname, Date dateBuy, Date dateArrival, String address, String numberPhone, int status) {
@@ -100,4 +102,13 @@ public class Order {
     public void setNumberPhone(String numberPhone) {
         this.numberPhone = numberPhone;
     }
+
+    public int getIs_verified() {
+        return is_verified;
+    }
+
+    public void setIs_verified(int is_verified) {
+        this.is_verified = is_verified;
+    }
+
 }

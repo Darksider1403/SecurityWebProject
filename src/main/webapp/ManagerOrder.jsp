@@ -98,6 +98,13 @@
                 </div>
 
                 <div class="menu-item">
+                    <a href="./ServletCheckVerify">
+                        <div class="icon"><i class="fa-solid fa-comment"></i></div>
+                        <p class="menu-content"> Kiem Tra Chu Ki dien tu</p>
+
+                    </a>
+                </div>
+                <div class="menu-item">
                     <a href="./ServletLogOut">
                         <p class="menu-content">Đăng xuất</p>
                     </a>
@@ -118,35 +125,32 @@
                                 <th>Tên khách hàng</th>
                                 <th>Ngày đặt hàng</th>
                                 <th>Ngày giao hàng</th>
-                                <th>địa chỉ</th>
-                                <th>số điện thoại</th>
+                                <th>Địa chỉ</th>
+                                <th>Số điện thoại</th>
                                 <th>Trạng thái</th>
                                 <th>Thao tác</th>
+                                <th>Ki ten</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <% for (Order o : orderList) {%>
+                            <% for (Order o : orderList) { %>
                             <tr>
-                                <th><%=o.getId()%>
-                                </th>
-                                <th><%=o.getFullname()%>
-                                </th>
-                                <th><%=o.getDateBuy()%>
-                                </th>
-                                <th><%=o.getDateArrival()%>
-                                </th>
-                                <th><%=o.getAddress()%>
-                                </th>
-                                <th><%=o.getNumberPhone()%>
-                                </th>
+                                <th><%= o.getId() %></th>
+                                <th><%= o.getFullname() %></th>
+                                <th><%= o.getDateBuy() %></th>
+                                <th><%= o.getDateArrival() %></th>
+                                <th><%= o.getAddress() %></th>
+                                <th><%= o.getNumberPhone() %></th>
                                 <th>
-                                    <%if (o.getStatus() == 0) {%>
-                                    Chưa giao hàng
-                                    <%} else if (o.getStatus() == 1) {%>
-                                    Đang giao hàng
-                                    <%} else {%>
-                                    Đã giao hàng
-                                    <%}%>
+                                    <form action="./ServletOrderStatus" method="post">
+                                        <select class="status" name="status">
+                                            <option value="0" <%= o.getStatus() == 0 ? "selected" : "" %>>Chưa giao hàng</option>
+                                            <option value="1" <%= o.getStatus() == 1 ? "selected" : "" %>>Đang giao hàng</option>
+                                            <option value="2" <%= o.getStatus() == 2 ? "selected" : "" %>>Đã giao hàng</option>
+                                        </select>
+                                        <input type="hidden" name="id" value="<%= o.getId() %>">
+                                        <button class="btn-repair" style="padding: 5px 10px;">Cập nhật</button>
+                                    </form>
                                 </th>
                                 <th>
                                     <form action="./managerOrder" method="post">
@@ -154,10 +158,14 @@
                                         <button type="submit" class="btn-xemChiTiet">Xem chi tiết</button>
                                     </form>
                                 </th>
+                                <th>
+                                    <%= (o.getVertify() == 0) ? "Chưa xác nhận" : "Đã xác nhận" %>
+                                </th>
                             </tr>
-                            <%}%>
+                            <% } %>
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>

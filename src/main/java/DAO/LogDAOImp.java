@@ -1,9 +1,8 @@
 package DAO;
 
-import DAO.LogDAO;
 import Model.Log;
-import Model.Log_Level;
 import org.jdbi.v3.core.Jdbi;
+
 import java.util.List;
 
 

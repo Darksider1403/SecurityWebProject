@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Account;
 import Model.Voucher;
 import org.jdbi.v3.core.Jdbi;
 

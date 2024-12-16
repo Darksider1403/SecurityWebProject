@@ -6,12 +6,11 @@ import Model.Slider;
 import org.jdbi.v3.core.Jdbi;
 
 import java.io.File;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ProductDAO {
@@ -363,7 +362,7 @@ public class ProductDAO {
     }
 
     public static void main(String[] args) {
-//        ProductDAO pr = new ProductDAO();
-//        pr.updateProduct("TL006",0);
+        ProductDAO pr = new ProductDAO();
+        pr.updateProduct("TL006",0);
     }
 }
