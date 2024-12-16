@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.KeyReport;
 import org.jdbi.v3.core.Jdbi;
 
 import java.sql.Timestamp;
@@ -29,78 +30,79 @@ public class KeyDAO {
         });
     }
 
-    public static boolean deactivateKey(int userId, String publicKey) {
-        JDBI = ConnectJDBI.connector();
-        return JDBI.withHandle(handle ->
-                handle.createUpdate("UPDATE user_keys SET is_active = false WHERE user_id = ? AND public_key = ?")
-                        .bind(0, userId)
-                        .bind(1, publicKey)
-                        .execute()
-        ) > 0;
-    }
-
-    public static String getActiveKey(int userId) {
-        JDBI = ConnectJDBI.connector();
-        return JDBI.withHandle(handle ->
-                handle.createQuery("SELECT public_key FROM user_keys WHERE user_id = ? AND is_active = true")
-                        .bind(0, userId)
-                        .mapTo(String.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-    }
-
     public static List<Map<String, Object>> getKeysByUserId(int userId) {
         JDBI = ConnectJDBI.connector();
         return JDBI.withHandle(handle ->
-                handle.createQuery("SELECT public_key, private_key, key_change_time FROM user_keys WHERE user_id = ?")
+        
+                handle.createQuery("""
+                SELECT public_key, 
+                       created_date,
+                       is_active, 
+                       key_change_time 
+                FROM user_keys 
+                WHERE user_id = ? 
+                ORDER BY created_date DESC""")
                         .bind(0, userId)
                         .mapToMap()
                         .list()
         );
     }
 
-    public static void insertUserKeys(int userId, String publicKey, String privateKey) {
+    public static boolean hasActiveKey(int userId) {
         JDBI = ConnectJDBI.connector();
-        JDBI.useHandle(handle ->
-                handle.createUpdate("INSERT INTO user_keys (user_id, public_key, private_key) VALUES (?, ?, ?)")
+        return JDBI.withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) > 0 FROM user_keys WHERE user_id = ? AND is_active = true")
                         .bind(0, userId)
-                        .bind(1, publicKey)
-                        .bind(2, privateKey)
+                        .mapTo(Boolean.class)
+                        .one()
+        );
+    }
+
+    public static int createKeyReport(int userId) {
+        JDBI = ConnectJDBI.connector();
+        return JDBI.withHandle(handle ->
+                handle.createUpdate("INSERT INTO key_reports(user_id, status, created_date) VALUES (?, 'PENDING', ?)")
+                        .bind(0, userId)
+                        .bind(1, LocalDateTime.now())
                         .execute()
         );
     }
 
-    public static void updateUserKeys(int userId, String publicKey, String privateKey) {
+    public List<KeyReport> getAllKeyReports() {
         JDBI = ConnectJDBI.connector();
-        JDBI.useHandle(handle ->
-                handle.createUpdate("UPDATE user_keys SET public_key = ?, private_key = ?, key_change_time = CURRENT_TIMESTAMP WHERE user_id = ?")
-                        .bind(0, publicKey)
-                        .bind(1, privateKey)
-                        .bind(2, userId)
-                        .execute()
+        return JDBI.withHandle(handle ->
+                handle.createQuery("""
+            SELECT kr.id, kr.user_id, kr.status, 
+                   kr.created_date as report_date, kr.resolved_date,
+                   a.username
+            FROM key_reports kr 
+            JOIN accounts a ON kr.user_id = a.id 
+            ORDER BY kr.created_date DESC
+            """)
+                        .mapToBean(KeyReport.class)
+                        .list()
         );
     }
 
-    public static boolean isKeyExpired(int userId, int maxDaysValid) {
-        JDBI = ConnectJDBI.connector();
-        return JDBI.withHandle(handle -> {
-            List<Map<String, Object>> results = handle.createQuery(
-                            "SELECT key_change_time FROM user_keys WHERE user_id = ?")
+    public static void approveKeyReport(int reportId, int userId) {
+        JDBI.useTransaction(handle -> {
+            // Deactivate current key
+            handle.createUpdate("UPDATE user_keys SET is_active = false WHERE user_id = ?")
                     .bind(0, userId)
-                    .mapToMap()
-                    .list();
+                    .execute();
 
-            if (!results.isEmpty()) {
-                Timestamp keyChangeTime = (Timestamp) results.get(0).get("key_change_time");
-                Timestamp now = new Timestamp(System.currentTimeMillis());
-
-                long diffInMillies = Math.abs(now.getTime() - keyChangeTime.getTime());
-                long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
-
-                return diffInDays > maxDaysValid;
-            }
-            return true; // No key found, consider as expired
+            // Update report status
+            handle.createUpdate("UPDATE key_reports SET status = 'Approved', resolved_date = ? WHERE id = ?")
+                    .bind(0, LocalDateTime.now())
+                    .bind(1, reportId)
+                    .execute();
         });
+    }
+
+    public static void main(String[] args) {
+        int userId = 19;
+        boolean active = hasActiveKey(userId);
+
+        System.out.println(active);
     }
 }
