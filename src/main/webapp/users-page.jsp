@@ -2,6 +2,7 @@
 <%@ page import="Model.Order" %>
 <%@ page import="Service.OrderService" %>
 <%@ page import="java.util.*" %>
+<%@ page import="DAO.OrderDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -257,7 +258,6 @@
                                                         if (orderListSS == null) {
                                                             System.out.println("null");
                                                         }
-                                                        for (Order order : orderListSS) {
                                                     %>
                                                     <td><%=order.getId()%>
                                                     <td><%=order.getDateBuy()%>
