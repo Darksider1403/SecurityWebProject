@@ -312,6 +312,10 @@
                                                     </button>
                                                 </c:otherwise>
                                             </c:choose>
+
+                                            <a href="assets/signatureapp.exe" download class="btn btn-info ms-2">
+                                                <i class="fas fa-download"></i> Tải ứng dụng xác thực
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
