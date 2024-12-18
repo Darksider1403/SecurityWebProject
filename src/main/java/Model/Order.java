@@ -104,6 +104,7 @@ public class Order {
     }
 
     public int getIs_verified() {
+        System.out.println("this is "+is_verified);
         return is_verified;
     }
 

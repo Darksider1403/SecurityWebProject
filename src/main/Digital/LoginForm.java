@@ -114,7 +114,7 @@ public class LoginForm extends JFrame {
     }
 
     private boolean validateLogin(String username, String encryptedPassword) throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/project_ltw";
+        String url = "jdbc:mysql://localhost:3306/project_ltw_tester";
         String dbUser = "root";
         String dbPassword = "";
 

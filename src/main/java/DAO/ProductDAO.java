@@ -154,7 +154,7 @@ public class ProductDAO {
         JDBI = ConnectJDBI.connector();
         int total = JDBI.withHandle(handle ->
                 handle.createQuery("SELECT SUM(quantity) " +
-                        "FROM products Where idCategory = ? And status = 1").bind(0, id_category).mapTo(Integer.class).findOnly()
+                        "FROM products Where idCategory = ? And status = 1").bind(0, id_category).mapTo(Integer.class).findOne().orElse(0)
         );
 
         return total;

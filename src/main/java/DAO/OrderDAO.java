@@ -23,6 +23,20 @@ public class OrderDAO {
                 handle.createQuery("Select COUNT(id) From orders").mapTo(Integer.class).findOnly());
         return total;
     }
+    public boolean updateOrderStatus(String orderId, int newStatus) {
+        JDBI = ConnectJDBI.connector();
+        try {
+            int rowsAffected = JDBI.withHandle(handle ->
+                    handle.createUpdate("UPDATE orders SET status = :newStatus WHERE id = :orderId")
+                            .bind("newStatus", newStatus)
+                            .bind("orderId", orderId)
+                            .execute());
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static int totalProductSoldByCategory(String id_category, String date) {
         JDBI = ConnectJDBI.connector();
@@ -228,7 +242,7 @@ public class OrderDAO {
     public static List<Order> getOrderList() {
         JDBI = ConnectJDBI.connector();
         List<Order> orderList = JDBI.withHandle(handle ->
-                handle.createQuery("SELECT o.id, a.fullname, o.dateBuy, o.dateArrival, o.address, o.numberPhone, o.status " +
+                handle.createQuery("SELECT o.id, a.fullname, o.dateBuy, o.dateArrival, o.address, o.numberPhone, o.status,o.is_verified " +
                         "From accounts a INNER JOIN orders o ON a.id = o.idAccount ").mapToBean(Order.class).stream().toList());
         return orderList;
     }
@@ -331,7 +345,7 @@ public class OrderDAO {
 
     public static void main(String[] args) {
         OrderDAO od = new OrderDAO();
-        System.out.println(od.getOrderDetails("OR016"));
+        od.updateOrderStatus("OR04",4);
 
     }
 }

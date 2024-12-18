@@ -147,6 +147,7 @@
                                             <option value="0" <%= o.getStatus() == 0 ? "selected" : "" %>>Chưa giao hàng</option>
                                             <option value="1" <%= o.getStatus() == 1 ? "selected" : "" %>>Đang giao hàng</option>
                                             <option value="2" <%= o.getStatus() == 2 ? "selected" : "" %>>Đã giao hàng</option>
+                                            <option value="2" <%= o.getStatus() == 4 ? "selected" : "" %>>Được xử lí lại</option>
                                         </select>
                                         <input type="hidden" name="id" value="<%= o.getId() %>">
                                         <button class="btn-repair" style="padding: 5px 10px;">Cập nhật</button>
@@ -159,7 +160,7 @@
                                     </form>
                                 </th>
                                 <th>
-                                    <%= (o.getVertify() == 0) ? "Chưa xác nhận" : "Đã xác nhận" %>
+                                    <%= (o.getIs_verified() == 0) ? "Chưa xác nhận" : "Đã xác nhận" %>
                                 </th>
                             </tr>
                             <% } %>
