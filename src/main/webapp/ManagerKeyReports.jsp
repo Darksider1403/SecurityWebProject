@@ -16,6 +16,125 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <style>
+        /* Center table elements and add lines */
+        #myTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        #myTable th, #myTable td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        #myTable th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        #myTable tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #myTable tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Center the title */
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title h2 {
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Style for the approve button */
+        .btn-action {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-action:hover {
+            background-color: #45a049;
+        }
+
+        /* Center the table in container */
+        .contain {
+            padding: 20px;
+        }
+
+        /* DataTables adjustments */
+        .dataTables_wrapper {
+            padding: 20px 0;
+        }
+
+        /* Additional styling for table headers */
+        #myTable thead th {
+            background-color: #4a5568;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Status cell styling */
+        .status-cell {
+            font-weight: 500;
+        }
+
+        .status-pending {
+            color: #e67e22;
+        }
+
+        .status-approved {
+            color: #27ae60;
+        }
+
+        /* Make the table responsive */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Search box styling */
+        .dataTables_filter input {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        /* Pagination button styling */
+        .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: #4a5568;
+            color: white !important;
+            border-color: #4a5568;
+        }
+
+        /* Table info styling */
+        .dataTables_info {
+            padding: 10px 0;
+            color: #666;
+        }
+    </style>
 </head>
 <%
     Account a = session.getAttribute("account") == null ? new Account() : (Account) session.getAttribute("account");
@@ -104,55 +223,64 @@
                 <div class="title">
                     <h2>Quản lý Key Reports</h2>
                 </div>
-                <table id="myTable">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>User ID</th>
-                        <th>Username</th>
-                        <th>Status</th>
-                        <th>Report Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${keyReports}" var="report">
+                <div class="table-responsive">
+                    <table id="myTable">
+                        <thead>
                         <tr>
-                            <td>${report.id}</td>
-                            <td>${report.userID}</td>
-                            <td>${report.username}</td>
-                            <td>${report.status}</td>
-                            <td>${report.reportDate}</td>
-                            <td>
-                                <c:if test="${report.status eq 'PENDING'}">
-                                    <form action="./ServletApproveKeyReport" method="post" style="display: inline;">
-                                        <input type="hidden" name="reportId" value="${report.id}">
-                                        <input type="hidden" name="userId" value="${report.userID}">
-                                        <button type="submit" class="btn-action">Approve</button>
-                                    </form>
-                                </c:if>
-                            </td>
+                            <th>ID</th>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Report Date</th>
+                            <th>Actions</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${keyReports}" var="report">
+                            <tr>
+                                <td>${report.id}</td>
+                                <td>${report.userID}</td>
+                                <td>${report.username}</td>
+                                <td class="status-cell ${report.status eq 'PENDING' ? 'status-pending' : 'status-approved'}">
+                                        ${report.status}
+                                </td>
+                                <td>${report.reportDate}</td>
+                                <td>
+                                    <c:if test="${report.status eq 'PENDING'}">
+                                        <form action="./ServletApproveKeyReport" method="post" style="display: inline;">
+                                            <input type="hidden" name="reportId" value="${report.id}">
+                                            <input type="hidden" name="userId" value="${report.userID}">
+                                            <button type="submit" class="btn-action">Approve</button>
+                                        </form>
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="./js/account.js"></script>
 <script>
-    function openModal() {
-        document.getElementById("myModal").style.display = "flex";
-    }
-
-    function closeModal() {
-        document.getElementById("myModal").style.display = "none";
-    }
-
     $(document).ready(function () {
-        $('#myTable').DataTable();
-    })
+        $('#myTable').DataTable({
+            "language": {
+                "search": "Tìm kiếm:",
+                "lengthMenu": "Hiển thị _MENU_ mục",
+                "info": "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                "infoEmpty": "Hiển thị 0 đến 0 của 0 mục",
+                "infoFiltered": "(được lọc từ _MAX_ mục)",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Tiếp",
+                    "previous": "Trước"
+                }
+            }
+        });
+    });
 </script>
 </html>

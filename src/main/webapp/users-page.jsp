@@ -392,11 +392,14 @@
                                                                 chữ
                                                                 ký
                                                             </button>
+                                                            <% if (order.getIs_verified() == 1) { %>
+                                                            <!-- Only visible if the order has been verified -->
                                                             <button type="button"
                                                                     class="btn btn-danger report-order-btn"
                                                                     data-order-id="<%= order.getId() %>">
                                                                 Báo cáo đơn hàng
                                                             </button>
+                                                            <% } %>
 
                                                         </form>
                                                     </td>
@@ -743,7 +746,9 @@
                     $('#signatureVerificationResult').html(`
                     <div class="alert alert-danger" role="alert">
                         <strong>Xác minh không thành công!</strong><br>
-                        ${xhr.responseText || 'Đã xảy ra lỗi khi xác minh chữ ký.'}
+                        Chư kí cho đơn hàng  ${orderId} không hợp lệ
+<%--                        ${xhr.responseText || 'Đã xảy ra lỗi khi xác minh chữ ký.'}--%>
+
                     </div>
                 `);
                     $('#signatureVerificationModal').modal('show');
@@ -808,5 +813,4 @@
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

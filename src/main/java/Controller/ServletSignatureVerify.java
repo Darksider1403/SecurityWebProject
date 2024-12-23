@@ -1,6 +1,4 @@
-
-        package Controller;
-
+package Controller;
 import DAO.ConnectJDBI;
 import DAO.OrderDAO;
 import org.jdbi.v3.core.Jdbi;
@@ -185,10 +183,9 @@ public class ServletSignatureVerify extends HttpServlet {
         return hexString.toString();
     }
 
-
     public static void main(String[] args) {
-        ServletSignatureVerify verifier = new ServletSignatureVerify();
-        boolean isValid = verifier.verifyOrderSignature("OR018");
-        System.out.println("Signature Verification Result: " + isValid);
+        ServletSignatureVerify si = new ServletSignatureVerify();
+        boolean iv = si.verifyOrderSignature("OR01");
+        System.out.println( iv);
     }
 }
